@@ -1,5 +1,3 @@
-// ====== script.js ======
-
 // ====== Firebase config ======
 const firebaseConfig = {
   apiKey: "AIzaSyDbF1Xi9ajCcLj6MfJQEhkhedOnkeo8aO8",
@@ -16,7 +14,6 @@ const db = firebase.database();
 const storage = firebase.storage();
 const auth = firebase.auth();
 
-// ====== Переменные ======
 let currentUser=null, currentNick="", currentAvatar="", activeChat=null, chatUsers=[];
 
 const elLogin = document.getElementById("login");
@@ -157,7 +154,7 @@ function renderChatList(){
       const div = document.createElement("div"); div.className="chatUser";
       const wrapper = document.createElement("div"); wrapper.style.position="relative";
       const img = document.createElement("img"); img.src = u.avatarUrl || "https://via.placeholder.com/40?text=U";
-      img.onerror = ()=>{img.src="https://via.placeholder.com/40?text=U";}
+      img.onerror=()=>{img.src="https://via.placeholder.com/40?text=U";}
       wrapper.appendChild(img);
       const status = document.createElement("div"); status.className="status "+(u.online?"online":"offline");
       wrapper.appendChild(status);

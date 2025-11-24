@@ -20,8 +20,8 @@ const auth = firebase.auth();
 let currentUser = null;
 let currentNick = "";
 let currentAvatar = "";
-let activeChat = null; // uid собеседника
-let chatUsers = []; // список uid в чате
+let activeChat = null;
+let chatUsers = [];
 
 // ====== ЭЛЕМЕНТЫ ======
 const elLogin = document.getElementById("login");
@@ -38,19 +38,40 @@ const sidebarEl = document.querySelector(".sidebar");
 
 // ====== АВТОРИЗАЦИЯ ======
 auth.onAuthStateChanged(async user => {
-  if (user) {
-    currentUser = user.uid;
-    await loadMyProfile();
+  if (!user) {
+    auth.signInAnonymously().catch(err => console.error(err));
+    return;
+  }
+  currentUser = user.uid;
+
+  // Проверяем локальные данные
+  const storedNick = localStorage.getItem("nick");
+  const storedAvatar = localStorage.getItem("avatarUrl");
+
+  if (storedNick && storedAvatar) {
+    currentNick = storedNick;
+    currentAvatar = storedAvatar;
+
+    await db.ref("users/" + currentUser).set({
+      nick: currentNick,
+      avatarUrl: currentAvatar,
+      online: true
+    });
+
     showApp();
     loadUsers();
     loadOnlineStatus();
     loadChatList();
   } else {
-    auth.signInAnonymously().catch(err => console.error(err));
+    showLogin();
   }
+
+  window.addEventListener("beforeunload", () => {
+    if(currentUser) db.ref("users/" + currentUser + "/online").set(false);
+  });
 });
 
-// ====== ЛОГИН / СОХРАНЕНИЕ НИКА ======
+// ====== ЛОГИН ======
 async function saveNickname() {
   const nick = elNickname.value.trim();
   if (!nick) return alert("Введите ник!");
@@ -65,6 +86,8 @@ async function saveNickname() {
     const ref = storage.ref(`avatars/${currentUser}_${Date.now()}.${ext}`);
     const task = await ref.put(file);
     avatarUrl = await task.ref.getDownloadURL();
+  } else if (!avatarUrl) {
+    avatarUrl = "https://via.placeholder.com/40?text=U";
   }
 
   currentNick = nick;
@@ -85,43 +108,30 @@ async function saveNickname() {
 }
 window.saveNickname = saveNickname;
 
-// ====== ЗАГРУЗКА ПРОФИЛЯ ======
-async function loadMyProfile() {
-  const snap = await db.ref("users/" + currentUser).once("value");
-  const data = snap.val();
-  if (data) {
-    currentNick = data.nick || localStorage.getItem("nick") || "";
-    currentAvatar = data.avatarUrl || localStorage.getItem("avatarUrl") || "";
-    elNickname.value = currentNick;
-    await db.ref("users/" + currentUser).update({online:true});
-    window.addEventListener("beforeunload", () => db.ref("users/" + currentUser + "/online").set(false));
-  }
-}
-
-// ====== ПОКАЗ / СКРЫТИЕ UI ======
+// ====== UI ======
 function showApp() { elLogin.style.display = "none"; elApp.style.display = "flex"; }
 function showLogin() { elLogin.style.display = "flex"; elApp.style.display = "none"; }
 
-// ====== СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ======
+// ====== ЗАГРУЗКА ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ======
 function loadUsers() {
   db.ref("users").on("value", snap => {
     const users = snap.val() || {};
     elUsers.innerHTML = "";
     Object.keys(users).forEach(uid => {
-      if (uid === currentUser) return; // не показываем себя
+      if (uid === currentUser) return;
       const user = users[uid];
+
       const div = document.createElement("div");
       div.className = "user";
 
-      // аватарка
       const wrapper = document.createElement("div");
       wrapper.style.position = "relative";
+
       const img = document.createElement("img");
       img.src = user.avatarUrl || "https://via.placeholder.com/40?text=U";
       img.onerror = () => { img.src = "https://via.placeholder.com/40?text=U"; };
       wrapper.appendChild(img);
 
-      // онлайн статус
       const status = document.createElement("div");
       status.className = "status " + (user.online ? "online" : "offline");
       wrapper.appendChild(status);
@@ -132,7 +142,6 @@ function loadUsers() {
       span.textContent = user.nick || "NoName";
       div.appendChild(span);
 
-      // кнопка + / - для добавления в чат
       const btn = document.createElement("button");
       if(chatUsers.includes(uid)){
         btn.textContent = "-";
@@ -204,10 +213,11 @@ function renderChatList(){
   });
 }
 
-// ====== ЗАГРУЗКА СПИСОКА ЧАТОВ И ИНДИКАТОРА ONLINE ======
+// ====== ЗАГРУЗКА СПИСКА ЧАТОВ И ONLINE ======
 function loadChatList(){
   db.ref("users").on("value", snap=>{
     renderChatList();
+    loadUsers();
   });
 }
 
@@ -292,7 +302,6 @@ window.sendMessage = sendMessage;
 // ====== ОБНОВЛЕНИЕ ONLINE ======
 function loadOnlineStatus(){
   db.ref("users").on("value", snap=>{
-    // обновим статусы у всех
     renderChatList();
     loadUsers();
   });
@@ -311,5 +320,3 @@ document.addEventListener("click",(e)=>{
     closeSidebarMobile();
   }
 });
-
-// ====== ЗАГЛУШКА ДЛЯ АВАТАРОК ======

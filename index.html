@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Messenger TG Style</title>
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мессенджер</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
 <!-- Логин -->
 <div id="login">
-  <h2>Введите ник</h2>
-  <input id="nickname" placeholder="Ваш ник">
-
-  <h3>Выберите аватарку</h3>
-  <input type="file" id="avatarInput">
-
+  <h2>Вход / Регистрация</h2>
+  <input type="text" id="nickname" placeholder="Введите ник">
+  <input type="file" id="avatarInput" accept="image/png,image/jpeg">
   <button onclick="saveNickname()">Войти</button>
 </div>
 
-<!-- Приложение -->
-<div id="app" style="display:none;">
+<!-- Основное приложение -->
+<div id="app">
+
+  <!-- Моя аватарка -->
+  <div class="myProfile">
+    <img id="myAvatar" src="https://via.placeholder.com/40?text=U" alt="Аватар">
+    <input type="file" id="myAvatarInput" accept="image/png,image/jpeg" style="display:none;">
+  </div>
+
+  <!-- Сайдбар: список пользователей -->
   <div class="sidebar">
-    <input id="search" placeholder="Поиск пользователя" oninput="searchUsers()">
-    <h3>Список чатов:</h3>
-    <div id="chatList"></div>
-    <h3>Все пользователи:</h3>
+    <input type="text" id="search" placeholder="Поиск..." oninput="searchUsers()">
     <div id="users"></div>
   </div>
 
-  <div class="chat">
-    <div class="topBar" onclick="openSidebarMobile()">
-      <span id="chatWith">Выберите чат</span>
+  <!-- Список чатов -->
+  <div id="chatListContainer">
+    <div class="chatListHeader">
+      <span>Чаты</span>
+      <button id="closeChatList">×</button>
     </div>
-
-    <div id="messages"></div>
-
-    <div class="send">
-      <input id="msgInput" placeholder="Сообщение...">
-      <button onclick="sendMessage()">➤</button>
-    </div>
+    <div id="chatList"></div>
   </div>
+
+  <!-- Чат -->
+  <div class="chatWindow">
+    <div id="chatWith">Выберите чат</div>
+    <div id="messages"></div>
+    <input type="text" id="msgInput" placeholder="Введите сообщение">
+    <button onclick="sendMessage()">Отправить</button>
+  </div>
+
 </div>
 
 <script src="script.js"></script>

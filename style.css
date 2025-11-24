@@ -13,6 +13,12 @@ body {
   display:flex; height:100vh;
 }
 
+/* Моя аватарка */
+.myProfile {
+  position:fixed; top:10px; right:10px; cursor:pointer; z-index:100;
+}
+.myProfile img { width:40px; height:40px; border-radius:50%; border:2px solid #4caf50; }
+
 /* Сайдбар */
 .sidebar {
   width:250px; background:#eee; padding:10px; overflow-y:auto;
@@ -20,6 +26,7 @@ body {
 
 #users .user {
   display:flex; align-items:center; gap:10px; padding:5px; background:#fff; margin-bottom:5px; border-radius:5px;
+  position:relative;
 }
 
 #users .user img {
@@ -38,12 +45,6 @@ body {
 }
 #users .user button.remove { background:red; }
 
-/* Моя аватарка */
-.myProfile {
-  position:fixed; top:10px; right:10px; cursor:pointer; z-index:100;
-}
-.myProfile img { width:40px; height:40px; border-radius:50%; border:2px solid #4caf50; }
-
 /* Список чатов */
 #chatListContainer {
   width:250px; background:#f0f0f0; overflow-y:auto; transition: transform 0.3s; position:relative;
@@ -53,7 +54,7 @@ body {
   display:flex; justify-content:space-between; align-items:center; padding:10px; background:#ddd; border-bottom:1px solid #ccc;
 }
 .chatUser {
-  display:flex; align-items:center; gap:10px; padding:5px; cursor:pointer;
+  display:flex; align-items:center; gap:10px; padding:5px; cursor:pointer; position:relative;
 }
 .chatUser img { width:35px; height:35px; border-radius:50%; }
 .chatUser .status { width:10px; height:10px; border-radius:50%; position:absolute; bottom:2px; right:2px; }
@@ -68,5 +69,6 @@ body {
 .msgBody { max-width:70%; background:#e1ffc7; padding:5px 10px; border-radius:10px; margin:0 5px; }
 .myMsg .msgBody { background:#c7dfff; }
 
-#msgInput { padding:10px; border:none; border-top:1px solid #ccc; }
-button { cursor:pointer; }
+.sendMessage { display:flex; border-top:1px solid #ccc; }
+#msgInput { flex:1; padding:10px; border:none; }
+.sendMessage button { padding:10px; border:none; background:#4caf50; color:#fff; cursor:pointer; }

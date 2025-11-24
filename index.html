@@ -2,37 +2,44 @@
 <html>
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Messenger</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
 <div id="login">
   <h2>Введите ник</h2>
   <input id="nickname" placeholder="Ваш ник">
+
+  <h3>Выберите аватарку</h3>
+  <input type="file" id="avatarInput">
+
   <button onclick="saveNickname()">Войти</button>
 </div>
 
 <div id="app" style="display:none;">
   <div class="sidebar">
-    <input id="search" placeholder="Поиск пользователя" oninput="searchUsers()">
+    <input id="search" placeholder="Поиск" oninput="searchUsers()">
     <h3>Пользователи:</h3>
     <div id="users"></div>
   </div>
 
   <div class="chat">
-    <h2 id="chatWith">Выберите пользователя</h2>
+    <div class="topBar" onclick="openSidebarMobile()">
+      <span id="chatWith">Выберите пользователя</span>
+    </div>
 
     <div id="messages"></div>
 
     <div class="send">
       <input id="msgInput" placeholder="Сообщение...">
-      <button onclick="sendMessage()">Отправить</button>
+      <button onclick="sendMessage()">➤</button>
     </div>
   </div>
 </div>

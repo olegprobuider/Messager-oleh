@@ -36,6 +36,10 @@ const elChatWith = document.getElementById("chatWith");
 const elMsgInput = document.getElementById("msgInput");
 const sidebarEl = document.querySelector(".sidebar");
 
+// Для смены аватарки в любое время
+const avatarChangeInput = document.getElementById("avatarChangeInput");
+const changeAvatarBtn = document.getElementById("changeAvatarBtn");
+
 // ====== АВТОРИЗАЦИЯ ======
 auth.onAuthStateChanged(async user => {
   if (!user) {
@@ -108,11 +112,33 @@ async function saveNickname() {
 }
 window.saveNickname = saveNickname;
 
+// ====== Смена аватарки в любое время ======
+changeAvatarBtn.onclick = () => avatarChangeInput.click();
+
+avatarChangeInput.onchange = async () => {
+  const file = avatarChangeInput.files[0];
+  if(!file) return;
+
+  const ext = file.name.split(".").pop();
+  if (!["png","jpg","jpeg"].includes(ext.toLowerCase())) return alert("Только PNG/JPG!");
+
+  const ref = storage.ref(`avatars/${currentUser}_${Date.now()}.${ext}`);
+  const task = await ref.put(file);
+  const avatarUrl = await task.ref.getDownloadURL();
+
+  currentAvatar = avatarUrl;
+  localStorage.setItem("avatarUrl", avatarUrl);
+
+  await db.ref("users/" + currentUser).update({avatarUrl});
+  loadUsers();
+  renderChatList();
+}
+
 // ====== UI ======
 function showApp() { elLogin.style.display = "none"; elApp.style.display = "flex"; }
 function showLogin() { elLogin.style.display = "flex"; elApp.style.display = "none"; }
 
-// ====== ЗАГРУЗКА ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ======
+// ====== СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ======
 function loadUsers() {
   db.ref("users").on("value", snap => {
     const users = snap.val() || {};
@@ -143,15 +169,12 @@ function loadUsers() {
       div.appendChild(span);
 
       const btn = document.createElement("button");
-      if(chatUsers.includes(uid)){
-        btn.textContent = "-";
-        btn.classList.add("remove");
-      } else {
-        btn.textContent = "+";
-      }
+      updateChatButton(uid, btn);
+
       btn.onclick = (e)=>{
         e.stopPropagation();
-        toggleChatUser(uid, user.nick);
+        toggleChatUser(uid);
+        updateChatButton(uid, btn);
       }
       div.appendChild(btn);
 
@@ -160,8 +183,19 @@ function loadUsers() {
   });
 }
 
-// ====== ДОБАВЛЕНИЕ/УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ В СПИСОК ЧАТОВ ======
-function toggleChatUser(uid, nick) {
+// ====== Кнопка + / - ======
+function updateChatButton(uid, btn){
+  if(chatUsers.includes(uid)){
+    btn.textContent = "-";
+    btn.classList.add("remove");
+  } else {
+    btn.textContent = "+";
+    btn.classList.remove("remove");
+  }
+}
+
+// ====== Добавление/удаление пользователя в список чатов ======
+function toggleChatUser(uid) {
   if(chatUsers.includes(uid)){
     chatUsers = chatUsers.filter(u=>u!==uid);
   } else {
@@ -213,7 +247,7 @@ function renderChatList(){
   });
 }
 
-// ====== ЗАГРУЗКА СПИСКА ЧАТОВ И ONLINE ======
+// ====== Загрузка списка чатов и online ======
 function loadChatList(){
   db.ref("users").on("value", snap=>{
     renderChatList();
@@ -221,7 +255,7 @@ function loadChatList(){
   });
 }
 
-// ====== ОТКРЫТЬ ЧАТ ======
+// ====== Открыть чат ======
 function openChat(uid, nick){
   activeChat = uid;
   elChatWith.textContent = "Чат с "+nick;
@@ -238,7 +272,7 @@ function getChatId(){
   return currentUser<activeChat ? currentUser+"_"+activeChat : activeChat+"_"+currentUser;
 }
 
-// ====== РЕНДЕР СООБЩЕНИЙ ======
+// ====== Рендер сообщений ======
 function renderMessages(msgs){
   elMessages.innerHTML = "";
   const arr = Object.values(msgs).sort((a,b)=> (a.time||0)-(b.time||0));
@@ -277,7 +311,7 @@ function renderMessages(msgs){
   elMessages.scrollTop = elMessages.scrollHeight;
 }
 
-// ====== ОТПРАВКА СООБЩЕНИЯ ======
+// ====== Отправка сообщения ======
 async function sendMessage(){
   const txt = elMsgInput.value.trim();
   if(!txt) return;
@@ -299,7 +333,7 @@ async function sendMessage(){
 }
 window.sendMessage = sendMessage;
 
-// ====== ОБНОВЛЕНИЕ ONLINE ======
+// ====== Обновление online ======
 function loadOnlineStatus(){
   db.ref("users").on("value", snap=>{
     renderChatList();

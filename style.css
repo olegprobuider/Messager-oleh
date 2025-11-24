@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
 }
 
 #login {
@@ -10,12 +10,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-#login input {
-  padding: 10px;
-  margin: 10px;
-  width: 200px;
 }
 
 #app {
@@ -29,16 +23,22 @@ body {
   border-right: 1px solid #ccc;
   padding: 10px;
   overflow-y: auto;
+  background: white;
 }
 
 .user {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
+  border-bottom: 1px solid #eee;
 }
 
-.user:hover {
-  background: #f3f3f3;
+.user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .chat {
@@ -51,6 +51,20 @@ body {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+  background: #f5f5f5;
+}
+
+.msg {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msg img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 
 .send {
@@ -62,4 +76,24 @@ body {
 .send input {
   flex: 1;
   padding: 10px;
+  font-size: 16px;
+}
+
+.topBar {
+  padding: 10px;
+  background: #ddd;
+  border-bottom: 1px solid #ccc;
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    left: -100%;
+    top: 0;
+    background: white;
+    transition: 0.3s;
+    z-index: 10;
+  }
 }

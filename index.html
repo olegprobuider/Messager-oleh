@@ -2,55 +2,77 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messenger V3</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
 
-<div class="app">
+<div id="authScreen" class="auth">
+    <h2>Создать аккаунт</h2>
+    <input id="nicknameInput" placeholder="Введите ник">
+    <input id="avatarInput" type="file" accept="image/*">
+    <button onclick="createAccount()">Продолжить</button>
+</div>
 
-    <!-- ======= ЛЕВАЯ ПАНЕЛЬ — ГРУППЫ ======= -->
-    <div class="groups-panel">
+<div id="app" class="hidden">
+
+    <!-- ЛЕВО — группы -->
+    <div class="sidebar">
         <h2>Группы</h2>
+
+        <div class="groupCreate">
+            <input id="newGroupName" placeholder="Название группы">
+            <button onclick="createGroup()">+</button>
+        </div>
+
         <input id="groupSearch" placeholder="Поиск групп">
-        <button id="btnCreateGroup">Создать группу</button>
 
-        <div id="groupList"></div>
+        <div id="groupList" class="groupList"></div>
     </div>
 
-
-    <!-- ======= ЦЕНТР — ЧАТ ======= -->
-    <div class="chat-panel">
-        <div class="chat-header">
-            <img id="myAvatar" class="avatar-small">
-            <span id="myName"></span>
+    <!-- ЦЕНТР — чаты -->
+    <div class="chat">
+        <div class="chatHeader">
+            <div id="currentChatName">Выберите чат</div>
         </div>
 
-        <div id="messages"></div>
+        <div id="messages" class="messages"></div>
 
-        <div class="chat-input">
+        <div class="chatInput">
             <input id="messageInput" placeholder="Сообщение...">
-            <button id="sendMsg">➤</button>
+            <button onclick="sendMessage()">➤</button>
         </div>
     </div>
 
+    <!-- ПРАВО — контакты -->
+    <div class="contacts">
+        <div class="profileBox" onclick="openProfileEdit()">
+            <img id="myAvatarSmall">
+            <span id="myNicknameSmall"></span>
+        </div>
 
-    <!-- ======= ПРАВАЯ ПАНЕЛЬ — КОНТАКТЫ ======= -->
-    <div class="contacts-panel">
         <h2>Контакты</h2>
-        <input id="contactSearch" placeholder="Поиск пользователей">
 
-        <div id="searchResults"></div>
-
-        <h3>Мои контакты</h3>
-        <div id="contactsList"></div>
+        <input id="contactSearch" placeholder="Поиск пользователя">
+        <div id="contactList" class="contactList"></div>
     </div>
 
 </div>
 
+<!-- Окно редактирования аккаунта -->
+<div id="profileEdit" class="modal hidden">
+    <div class="modalContent">
+        <h2>Редактировать аккаунт</h2>
+        <input id="editNickname" placeholder="Новый ник">
+        <input id="editAvatar" type="file">
+        <button onclick="saveProfile()">Сохранить</button>
+        <button onclick="closeProfileEdit()">Закрыть</button>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

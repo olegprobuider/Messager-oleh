@@ -1,156 +1,66 @@
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #0f0f0f;
-    color: #fff;
+:root{
+  --accent:#6C63FF;
+  --bg:#0f1720;
+  --card:#0b1220;
+  --muted:#97A0B3;
+  --glass: rgba(255,255,255,0.03);
 }
 
-.hidden { display: none; }
+*{box-sizing:border-box}
+body,html{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial; background: linear-gradient(180deg,#07101a 0%, #071829 100%); color:#e6eef8}
 
-.auth {
-    width: 300px;
-    margin: 100px auto;
-    background: #1b1b1b;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
+#app{display:flex;height:100vh;gap:18px;padding:18px}
 
-.auth input {
-    width: 100%;
-    margin: 6px 0;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-}
+/* Sidebar */
+.sidebar{width:320px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;display:flex;flex-direction:column}
+.profile{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.profile img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
+.profile-info{flex:1}
+.profile-info #profileName{font-weight:700}
+.profile-info button{margin-top:6px;padding:6px 8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);border-radius:8px;cursor:pointer}
 
-#app {
-    display: flex;
-    height: 100vh;
-}
+.search{display:flex;gap:8px;margin-top:12px}
+.search input{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:var(--glass);color:inherit}
+.search button{padding:8px 10px;border-radius:10px;background:linear-gradient(90deg,var(--accent), #A084FF);border:none;color:white;cursor:pointer}
 
-/* ---- ЛЕВО (Группы) ---- */
+/* Rooms list */
+.rooms-list{list-style:none;padding:8px 0;margin:0;overflow:auto}
+.room-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));cursor:pointer}
+.room-item:hover{transform:translateY(-2px)}
+.room-thumb{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;font-weight:700}
+.room-info{flex:1}
+.room-title{font-weight:700}
+.room-meta{font-size:12px;color:var(--muted)}
 
-.sidebar {
-    width: 25%;
-    background: #181818;
-    padding: 15px;
-    border-right: 3px solid #202020;
-    display: flex;
-    flex-direction: column;
-}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;border-radius:12px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00))}
+.chat-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.messages{flex:1;padding:12px;overflow:auto}
+.message{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.message.self{flex-direction:row-reverse}
+.message .bubble{max-width:70%;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.02);color:inherit}
+.message.self .bubble{background:linear-gradient(90deg,var(--accent), #A084FF);color:white}
+.message .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.message .meta{font-size:11px;color:var(--muted);margin-top:6px}
 
-.groupCreate {
-    display: flex;
-}
+/* Message form */
+.message-form{display:flex;gap:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);align-items:center}
+.message-form input[type="text"], .message-form input[type="search"]{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:var(--glass);color:inherit}
+.message-form button{padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--accent), #A084FF);border:none;color:white;cursor:pointer}
+.file-label input{display:none}
+.file-label{cursor:pointer;padding:6px;border-radius:8px;background:rgba(255,255,255,0.02)}
 
-.groupCreate input {
-    flex: 1;
-    padding: 8px;
-}
+/* Modals */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45)}
+.modal.hidden{display:none}
+.modal-content{background:#071226;padding:16px;border-radius:12px;min-width:320px}
+.modal-content label{display:block;margin:8px 0}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.modal-actions button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
 
-.groupCreate button {
-    width: 40px;
-}
-
-.groupList div {
-    padding: 10px;
-    margin-top: 5px;
-    background: #262626;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* ---- ЧАТЫ ---- */
-
-.chat {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-}
-
-.chatHeader {
-    padding: 15px;
-    font-size: 20px;
-    background: #1c1c1c;
-    border-bottom: 3px solid #202020;
-}
-
-.messages {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.chatInput {
-    display: flex;
-    padding: 10px;
-    background: #1c1c1c;
-}
-
-.chatInput input {
-    flex: 1;
-    padding: 10px;
-}
-
-.chatInput button {
-    width: 50px;
-}
-
-/* ---- ПРАВО (Контакты) ---- */
-
-.contacts {
-    width: 25%;
-    background: #181818;
-    padding: 15px;
-    border-left: 3px solid #202020;
-}
-
-.profileBox {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.profileBox img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-/* ---- Попап для редактирования ---- */
-
-.modal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: #000000aa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modalContent {
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-/* ---- МОБИЛЬНАЯ АДАПТАЦИЯ ---- */
-@media (max-width: 900px) {
-    #app {
-        flex-direction: column;
-    }
-
-    .sidebar, .contacts {
-        width: 100%;
-        height: auto;
-        border: none;
-    }
-
-    .chat {
-        width: 100%;
-        height: 70vh;
-    }
+/* small screens */
+@media(max-width:880px){
+  #app{flex-direction:column;padding:8px}
+  .sidebar{width:100%;order:2}
+  .main{order:1}
 }

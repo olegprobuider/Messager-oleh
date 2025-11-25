@@ -1,66 +1,129 @@
-:root{
-  --accent:#6C63FF;
-  --bg:#0f1720;
-  --card:#0b1220;
-  --muted:#97A0B3;
-  --glass: rgba(255,255,255,0.03);
+body {
+    margin: 0;
+    background: #1e1e1e;
+    font-family: Arial, sans-serif;
+    color: #fff;
 }
 
-*{box-sizing:border-box}
-body,html{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial; background: linear-gradient(180deg,#07101a 0%, #071829 100%); color:#e6eef8}
+.app {
+    display: flex;
+    height: 100vh;
+}
 
-#app{display:flex;height:100vh;gap:18px;padding:18px}
+/* ==== ЛЕВО — ГРУППЫ ==== */
+.groups-panel {
+    width: 20%;
+    background: #252525;
+    padding: 10px;
+    border-right: 2px solid #333;
+}
 
-/* Sidebar */
-.sidebar{width:320px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;display:flex;flex-direction:column}
-.profile{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
-.profile img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
-.profile-info{flex:1}
-.profile-info #profileName{font-weight:700}
-.profile-info button{margin-top:6px;padding:6px 8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);border-radius:8px;cursor:pointer}
+.groups-panel h2 {
+    margin: 5px 0;
+}
 
-.search{display:flex;gap:8px;margin-top:12px}
-.search input{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:var(--glass);color:inherit}
-.search button{padding:8px 10px;border-radius:10px;background:linear-gradient(90deg,var(--accent), #A084FF);border:none;color:white;cursor:pointer}
+.groups-panel input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background: #333;
+    border: none;
+    color: white;
+}
 
-/* Rooms list */
-.rooms-list{list-style:none;padding:8px 0;margin:0;overflow:auto}
-.room-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;margin-bottom:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));cursor:pointer}
-.room-item:hover{transform:translateY(-2px)}
-.room-thumb{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;font-weight:700}
-.room-info{flex:1}
-.room-title{font-weight:700}
-.room-meta{font-size:12px;color:var(--muted)}
+.groups-panel button {
+    width: 100%;
+    padding: 8px;
+    background: #444;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
 
-/* Main */
-.main{flex:1;display:flex;flex-direction:column;border-radius:12px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00))}
-.chat-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
-.messages{flex:1;padding:12px;overflow:auto}
-.message{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
-.message.self{flex-direction:row-reverse}
-.message .bubble{max-width:70%;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.02);color:inherit}
-.message.self .bubble{background:linear-gradient(90deg,var(--accent), #A084FF);color:white}
-.message .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
-.message .meta{font-size:11px;color:var(--muted);margin-top:6px}
+#groupList div {
+    padding: 8px;
+    background: #333;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
 
-/* Message form */
-.message-form{display:flex;gap:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);align-items:center}
-.message-form input[type="text"], .message-form input[type="search"]{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:var(--glass);color:inherit}
-.message-form button{padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--accent), #A084FF);border:none;color:white;cursor:pointer}
-.file-label input{display:none}
-.file-label{cursor:pointer;padding:6px;border-radius:8px;background:rgba(255,255,255,0.02)}
+/* ==== СЕРЕДИНА — ЧАТ ==== */
+.chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-/* Modals */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45)}
-.modal.hidden{display:none}
-.modal-content{background:#071226;padding:16px;border-radius:12px;min-width:320px}
-.modal-content label{display:block;margin:8px 0}
-.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
-.modal-actions button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
+.chat-header {
+    background: #2c2c2c;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-/* small screens */
-@media(max-width:880px){
-  #app{flex-direction:column;padding:8px}
-  .sidebar{width:100%;order:2}
-  .main{order:1}
+.avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: gray;
+}
+
+#messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #333;
+    width: fit-content;
+    border-radius: 6px;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #222;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    background: #333;
+    border: none;
+    color: white;
+}
+
+.chat-input button {
+    padding: 8px 12px;
+    background: #555;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+/* ==== ПРАВО — КОНТАКТЫ ==== */
+.contacts-panel {
+    width: 25%;
+    background: #252525;
+    padding: 10px;
+    border-left: 2px solid #333;
+}
+
+.contacts-panel input {
+    width: 100%;
+    padding: 8px;
+    background: #333;
+    border: none;
+    color: white;
+}
+
+#searchResults div, #contactsList div {
+    padding: 8px;
+    background: #333;
+    margin-top: 5px;
+    cursor: pointer;
 }

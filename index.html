@@ -1,78 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger V3</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Messenger v2</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase v8 (compat) — ваш код инициализации использует firebase.initializeApp -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 </head>
 <body>
-
-<div id="authScreen" class="auth">
-    <h2>Создать аккаунт</h2>
-    <input id="nicknameInput" placeholder="Введите ник">
-    <input id="avatarInput" type="file" accept="image/*">
-    <button onclick="createAccount()">Продолжить</button>
-</div>
-
-<div id="app" class="hidden">
-
-    <!-- ЛЕВО — группы -->
-    <div class="sidebar">
-        <h2>Группы</h2>
-
-        <div class="groupCreate">
-            <input id="newGroupName" placeholder="Название группы">
-            <button onclick="createGroup()">+</button>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="profile">
+        <img id="profileAvatar" src="" alt="Ава" />
+        <div class="profile-info">
+          <div id="profileName">Гость</div>
+          <button id="editProfileBtn">Редактировать</button>
         </div>
+      </div>
 
-        <input id="groupSearch" placeholder="Поиск групп">
+      <div class="search">
+        <input id="searchInput" placeholder="Поиск чатов..." />
+        <button id="newRoomBtn">+ Новый чат</button>
+      </div>
 
-        <div id="groupList" class="groupList"></div>
+      <ul id="roomsList" class="rooms-list"></ul>
+    </aside>
+
+    <main class="main">
+      <header class="chat-header">
+        <div id="roomTitle">Выберите чат</div>
+        <div id="roomMeta"></div>
+      </header>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="messageForm" class="message-form">
+        <input id="messageInput" placeholder="Написать сообщение..." autocomplete="off" />
+        <label class="file-label">
+          📎
+          <input id="fileInput" type="file" accept="image/*" />
+        </label>
+        <button type="submit">Отправить</button>
+      </form>
+    </main>
+  </div>
+
+  <!-- Модал для редактирования профиля -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Профиль</h3>
+      <label>Никнейм
+        <input id="nickInput" />
+      </label>
+      <label>Аватар
+        <input id="avatarInput" type="file" accept="image/*" />
+      </label>
+      <div class="modal-actions">
+        <button id="saveProfileBtn">Сохранить</button>
+        <button id="cancelProfileBtn">Отмена</button>
+      </div>
     </div>
+  </div>
 
-    <!-- ЦЕНТР — чаты -->
-    <div class="chat">
-        <div class="chatHeader">
-            <div id="currentChatName">Выберите чат</div>
-        </div>
-
-        <div id="messages" class="messages"></div>
-
-        <div class="chatInput">
-            <input id="messageInput" placeholder="Сообщение...">
-            <button onclick="sendMessage()">➤</button>
-        </div>
+  <!-- Модал создания комнаты -->
+  <div id="roomModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Создать чат</h3>
+      <label>Название
+        <input id="roomNameInput" />
+      </label>
+      <label>Описание (опционально)
+        <input id="roomDescInput" />
+      </label>
+      <div class="modal-actions">
+        <button id="createRoomBtn">Создать</button>
+        <button id="cancelRoomBtn">Отмена</button>
+      </div>
     </div>
+  </div>
 
-    <!-- ПРАВО — контакты -->
-    <div class="contacts">
-        <div class="profileBox" onclick="openProfileEdit()">
-            <img id="myAvatarSmall">
-            <span id="myNicknameSmall"></span>
-        </div>
-
-        <h2>Контакты</h2>
-
-        <input id="contactSearch" placeholder="Поиск пользователя">
-        <div id="contactList" class="contactList"></div>
-    </div>
-
-</div>
-
-<!-- Окно редактирования аккаунта -->
-<div id="profileEdit" class="modal hidden">
-    <div class="modalContent">
-        <h2>Редактировать аккаунт</h2>
-        <input id="editNickname" placeholder="Новый ник">
-        <input id="editAvatar" type="file">
-        <button onclick="saveProfile()">Сохранить</button>
-        <button onclick="closeProfileEdit()">Закрыть</button>
-    </div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="script.js"></script>
+  <script>
+    // Вставьте ваш firebaseConfig сюда (тот, который вы прислали)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDbF1Xi9ajCcLj6MfJQEhkhedOnkeo8aO8",
+      authDomain: "messager-v2.firebaseapp.com",
+      databaseURL: "https://messager-v2-default-rtdb.firebaseio.com",
+      projectId: "messager-v2",
+      storageBucket: "messager-v2.firebasestorage.app",
+      messagingSenderId: "715324115354",
+      appId: "1:715324115354:web:40df5fe73cf89fdb451223",
+      measurementId: "G-C4K7787PDP"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>

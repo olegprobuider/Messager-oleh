@@ -1,102 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Messenger v2</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Firebase v8 (compat) — ваш код инициализации использует firebase.initializeApp -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messenger v2</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 </head>
+
 <body>
-  <div id="app">
+<div id="app">
     <aside class="sidebar">
-      <div class="profile">
-        <img id="profileAvatar" src="" alt="Ава" />
-        <div class="profile-info">
-          <div id="profileName">Гость</div>
-          <button id="editProfileBtn">Редактировать</button>
+        <div class="profile">
+            <img id="profileAvatar">
+            <div class="profile-info">
+                <div id="profileName">Гость</div>
+                <button id="editProfileBtn">Редактировать</button>
+            </div>
         </div>
-      </div>
 
-      <div class="search">
-        <input id="searchInput" placeholder="Поиск чатов..." />
-        <button id="newRoomBtn">+ Новый чат</button>
-      </div>
+        <div class="search">
+            <input id="searchInput" placeholder="Поиск чатов">
+            <button id="newRoomBtn">+ Чат</button>
+        </div>
 
-      <ul id="roomsList" class="rooms-list"></ul>
+        <ul id="roomsList"></ul>
     </aside>
 
     <main class="main">
-      <header class="chat-header">
-        <div id="roomTitle">Выберите чат</div>
-        <div id="roomMeta"></div>
-      </header>
+        <div class="chat-header">
+            <div id="roomTitle">Выберите чат</div>
+            <div id="roomMeta"></div>
+        </div>
 
-      <div id="messages" class="messages"></div>
+        <div id="messages"></div>
 
-      <form id="messageForm" class="message-form">
-        <input id="messageInput" placeholder="Написать сообщение..." autocomplete="off" />
-        <label class="file-label">
-          📎
-          <input id="fileInput" type="file" accept="image/*" />
-        </label>
-        <button type="submit">Отправить</button>
-      </form>
+        <form id="messageForm">
+            <input id="messageInput" placeholder="Сообщение">
+            <input type="file" id="fileInput">
+            <button>Отправить</button>
+        </form>
     </main>
-  </div>
+</div>
 
-  <!-- Модал для редактирования профиля -->
-  <div id="profileModal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Профиль</h3>
-      <label>Никнейм
-        <input id="nickInput" />
-      </label>
-      <label>Аватар
-        <input id="avatarInput" type="file" accept="image/*" />
-      </label>
-      <div class="modal-actions">
-        <button id="saveProfileBtn">Сохранить</button>
-        <button id="cancelProfileBtn">Отмена</button>
-      </div>
-    </div>
-  </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDbF1Xi9ajCcLj6MfJQEhkhedOnkeo8aO8",
+  authDomain: "messager-v2.firebaseapp.com",
+  databaseURL: "https://messager-v2-default-rtdb.firebaseio.com",
+  projectId: "messager-v2",
+  storageBucket: "messager-v2.firebasestorage.app",
+  messagingSenderId: "715324115354",
+  appId: "1:715324115354:web:40df5fe73cf89fdb451223"
+};
+firebase.initializeApp(firebaseConfig);
+</script>
 
-  <!-- Модал создания комнаты -->
-  <div id="roomModal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Создать чат</h3>
-      <label>Название
-        <input id="roomNameInput" />
-      </label>
-      <label>Описание (опционально)
-        <input id="roomDescInput" />
-      </label>
-      <div class="modal-actions">
-        <button id="createRoomBtn">Создать</button>
-        <button id="cancelRoomBtn">Отмена</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Вставьте ваш firebaseConfig сюда (тот, который вы прислали)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDbF1Xi9ajCcLj6MfJQEhkhedOnkeo8aO8",
-      authDomain: "messager-v2.firebaseapp.com",
-      databaseURL: "https://messager-v2-default-rtdb.firebaseio.com",
-      projectId: "messager-v2",
-      storageBucket: "messager-v2.appspot.com",
-      messagingSenderId: "715324115354",
-      appId: "1:715324115354:web:40df5fe73cf89fdb451223",
-      measurementId: "G-C4K7787PDP"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
-</html>
+                  </html>
